@@ -101,6 +101,9 @@ EOF
     log_info "已创建 systemd 服务"
 }
 
+ # ===获取本机IP用于提示 ===
+    LOCAL_IP=$(ip -4 addr show | grep 192.168.  | awk '{print $2}' | cut -d/ -f1)
+    
 # === 主流程 ===
 main() {
     # 检查 root 权限
@@ -128,6 +131,19 @@ main() {
     echo "  服务:   systemctl start $SERVICE_NAME"
     echo ""
     log_info "首次运行请编辑配置: $CONFIG_DIR/ddns-go.json"
+    log_info "=========================================="
+    log_info "Web管理界面: http://${LOCAL_IP}:9876"
+    log_info "也可以访问: http://localhost:9876"
+    log_info "配置文件位置: /root/.ddns_go_config.yaml"
+    log_info "服务管理命令:"
+    log_info "  启动: systemctl start ddns-go"
+    log_info "  停止: systemctl stop ddns-go"
+    log_info "  状态: systemctl status ddns-go"
+    log_info "  重启: systemctl restart ddns-go"
+    log_info "  查看日志: journalctl -u ddns-go -f"
+    log_info "=========================================="
+    log_info "首次访问Web界面时，需要设置用户名和密码。"
+    log_info "如需要卸载，请运行: cd $INSTALL_DIR && ./ddns-go -s uninstall"
 }
 
 main "$@"
