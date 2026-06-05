@@ -101,8 +101,6 @@ EOF
     log_info "已创建 systemd 服务"
 }
 
- # ===获取本机IP用于提示 ===
-    LOCAL_IP=$(hostname -I | awk '{print $1}')
     
 # === 主流程 ===
 main() {
@@ -132,7 +130,7 @@ main() {
     echo ""
     log_info "首次运行请编辑配置: $CONFIG_DIR/ddns-go.json"
     log_info "=========================================="
-    log_info "Web管理界面: http://${LOCAL_IP}:9876"
+    log_info "Web管理界面: http://$(hostname -I | awk '{print $1}'):9876"
     log_info "也可以访问: http://localhost:9876"
     log_info "配置文件位置: /root/.ddns_go_config.yaml"
     log_info "服务管理命令:"
