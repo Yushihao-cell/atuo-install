@@ -8,7 +8,6 @@ set -e
 # === 配置 ===
 GH_REPO="jeessy2/ddns-go"
 INSTALL_DIR="/usr/local/bin"
-CONFIG_DIR="/etc/ddns-go"
 BIN_NAME="ddns-go"
 SERVICE_NAME="ddns-go"
 
@@ -70,13 +69,6 @@ install_binary() {
     log_info "已安装到: $INSTALL_DIR/$BIN_NAME"
 }
 
-# === 创建配置目录 ===
-setup_config() {
-    if [ ! -d "$CONFIG_DIR" ]; then
-        mkdir -p "$CONFIG_DIR"
-        log_info "已创建配置目录: $CONFIG_DIR"
-    fi
-}
 
 # === 创建 systemd 服务 ===
 setup_service() {
@@ -87,7 +79,7 @@ After=network.target
 
 [Service]
 Type=simple
-ExecStart=$INSTALL_DIR/$BIN_NAME -s install -c $CONFIG_DIR -l info
+ExecStart=$INSTALL_DIR/$BIN_NAME -s install
 ExecStop=$INSTALL_DIR/$BIN_NAME -s uninstall
 Restart=on-failure
 RestartSec=10
@@ -125,10 +117,8 @@ main() {
     log_info "✅ 安装完成！"
     echo ""
     echo "  二进制: $INSTALL_DIR/$BIN_NAME"
-    echo "  配置:   $CONFIG_DIR"
     echo "  服务:   systemctl start $SERVICE_NAME"
     echo ""
-    log_info "首次运行请编辑配置: $CONFIG_DIR/ddns-go.json"
     log_info "=========================================="
     log_info "Web管理界面: http://$(hostname -I | awk '{print $1}'):9876"
     log_info "也可以访问: http://localhost:9876"
@@ -141,7 +131,7 @@ main() {
     log_info "  查看日志: journalctl -u ddns-go -f"
     log_info "=========================================="
     log_info "首次访问Web界面时，需要设置用户名和密码。"
-    log_info "如需要卸载，请运行: cd $INSTALL_DIR && ./ddns-go -s uninstall"
+    log_info "如需要卸载，请运行: cd $INSTALL_DIR && ./ddns-go -s uninstall 或者systemctl stop ddns-go"
 }
 
 main "$@"
