@@ -102,7 +102,7 @@ EOF
 }
 
  # ===获取本机IP用于提示 ===
-    LOCAL_IP=$(ip -4 addr show | grep 192.168.  | awk '{print $2}' | cut -d/ -f1)
+    LOCAL_IP=$(hostname -I | awk '{print $1}')
     
 # === 主流程 ===
 main() {
